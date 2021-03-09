@@ -3,6 +3,15 @@ import { Button, TextField, Grid, Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import firebase from "../firebase/firebase.utils";
 import { Formik } from "formik";
+import * as Yup from "yup";
+// import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+
+const signInValidationSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid Email").required("Email is required!!"),
+  password: Yup.string()
+    .required("No password provided.")
+    .min(8, "Password is too short - should be 8 chars minimum."),
+});
 
 const stylesFunc = makeStyles({
   wrapper: {
@@ -29,8 +38,12 @@ function Signin() {
 
   return (
     <Container className={signinStyles.wrapper} maxWidth="sm">
-      <Formik initialValues={initialValues} onSubmit={handleFormSubmit}>
-        {({ handleSubmit, handleChange, values }) => (
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleFormSubmit}
+        validationSchema={signInValidationSchema}
+      >
+        {({ handleSubmit, handleChange, values, errors, touched }) => (
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
@@ -39,8 +52,11 @@ function Signin() {
                   label="Email"
                   variant="outlined"
                   fullWidth
+                  required
                   value={values.email}
                   onChange={handleChange}
+                  error={touched.email && errors.email}
+                  helperText={touched.email && errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -50,8 +66,11 @@ function Signin() {
                   variant="outlined"
                   type="password"
                   fullWidth
+                  required
                   value={values.password}
                   onChange={handleChange}
+                  error={touched.password && errors.password}
+                  helperText={touched.password && errors.password}
                 />
               </Grid>
               <Grid item xs={12}>
