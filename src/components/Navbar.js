@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -8,6 +9,8 @@ import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
+import { FirebaseAuthContext } from "../context/AuthContext";
+import firebase from "../firebase/firebase.utils";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,16 +25,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar() {
+  const { currentUser } = useContext(FirebaseAuthContext);
   const classes = useStyles();
+  const history = useHistory();
+
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSignOut =() => {
+    firebase.signOut();
+    history.push("/login");
   };
 
   return (
@@ -58,7 +70,7 @@ export default function Navbar() {
                 onClick={handleMenu}
                 color="inherit"
               >
-                 Display Name
+                {currentUser?.displayName}
                 <AccountCircle />
               </IconButton>
               <Menu
@@ -78,6 +90,7 @@ export default function Navbar() {
               >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
               </Menu>
             </div>
           )}
