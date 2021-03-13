@@ -4,6 +4,7 @@ import Signup from "../pages/Signup";
 import Signin from "../pages/Signin";
 import Main from '../pages/Main'
 import UserDetail from '../pages/UserDetail'
+import UserPost from "../pages/UserPost";
 import ForgotPasword from '../pages/ForgotPasword'
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -17,7 +18,12 @@ function AppRouter() {
       <Navbar />
       <Switch>
         <Route exact path="/forgot-password" component={ForgotPasword} />
-        <Route exact path="/user/:id" component={ currentUser ?   UserDetail : Signin} />
+        <Route exact path="/user/:id" component={ currentUser ? UserDetail : Signin} />
+        <Route
+          exact
+          path="/user/:id/post"
+          component={currentUser ? UserPost : Signin}
+        />
         <Route exact path="/register" component={Signup} />
         <Route exact path="/login" component={Signin} />
         <Route path="/" component={Main} />

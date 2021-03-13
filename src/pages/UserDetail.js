@@ -69,7 +69,6 @@ export const UserDetail = React.memo(function NewsCard() {
       .catch((err) => console.log(err))
       .finally();
   }, [id]);
-  //console.log(userDetail);
   return (
     <Container className={styles.wrapper}>
       {!userDetail == null ? (
