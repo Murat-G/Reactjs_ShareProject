@@ -37,7 +37,7 @@ export default function MediaCard({ id, userImage, userName, userEmail }) {
     history.push(`/user/${id}`);
   };
 
-  const handleUserPostClick = () => {
+  const handleUserPostClick = () => { 
     history.push(`/user/${id}/post`);
   };
 

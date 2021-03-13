@@ -1,11 +1,17 @@
 import React from "react";
-import { Button, TextField, Grid, Container,Avatar,Typography } from "@material-ui/core";
+import {
+  Button,
+  TextField,
+  Grid,
+  Container,
+  Avatar,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useFormik } from "formik";
 import firebase from "../firebase/firebase.utils";
 import * as Yup from "yup";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-
 
 const signUpValidationSchema = Yup.object().shape({
   displayName: Yup.string().required("Display Name is required!!"),
@@ -15,13 +21,12 @@ const signUpValidationSchema = Yup.object().shape({
     .min(8, "Password is too short - should be 8 chars minimum."),
 });
 
-
 const stylesFunc = makeStyles((theme) => ({
   wrapper: {
     marginTop: "3rem",
     height: "calc(100vh - 19.0625rem)",
     textAlign: "center",
-    marginBottom: "5rem",
+    marginBottom: "12rem",
   },
   avatar: {
     margin: "1rem auto",
@@ -52,10 +57,9 @@ function Signup() {
   });
   const signupStyles = stylesFunc();
 
-
-const handleGoogleButtonClick = () => {
+  const handleGoogleButtonClick = () => {
     firebase.useGoogleProvider();
-};
+  };
 
   return (
     <Container className={signupStyles.wrapper} maxWidth="sm">
@@ -65,7 +69,7 @@ const handleGoogleButtonClick = () => {
       <Typography className={signupStyles.signUp} variant="h4">
         Sign Up
       </Typography>
-      <form onSubmit={formik.handleSubmit} >
+      <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
@@ -73,8 +77,7 @@ const handleGoogleButtonClick = () => {
               label="Display Name"
               variant="outlined"
               fullWidth
-              value={formik.values.displayName}
-              onChange={formik.handleChange}
+              {...formik.getFieldProps("displayName")}
               error={formik.touched.displayName && formik.errors.displayName}
               helperText={
                 formik.touched.displayName && formik.errors.displayName
@@ -87,8 +90,7 @@ const handleGoogleButtonClick = () => {
               label="Email"
               variant="outlined"
               fullWidth
-              value={formik.values.email}
-              onChange={formik.handleChange}
+              {...formik.getFieldProps("email")}
               error={formik.touched.email && formik.errors.email}
               helperText={formik.touched.email && formik.errors.email}
             />
@@ -100,8 +102,7 @@ const handleGoogleButtonClick = () => {
               variant="outlined"
               type="password"
               fullWidth
-              value={formik.values.password}
-              onChange={formik.handleChange}
+              {...formik.getFieldProps("password")}
               error={formik.touched.password && formik.errors.password}
               helperText={formik.touched.password && formik.errors.password}
             />
@@ -123,6 +124,9 @@ const handleGoogleButtonClick = () => {
           </Grid>
         </Grid>
       </form>
+      <p>
+        Already have an account? <a className={signupStyles.login}  href="/login"> Login.</a>
+      </p>
     </Container>
   );
 }

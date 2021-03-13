@@ -1,11 +1,18 @@
-import React from "react";
-import { Button, TextField, Grid, Container,Typography,Avatar } from "@material-ui/core";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import {
+  Button,
+  TextField,
+  Grid,
+  Container,
+  Avatar,
+  Typography,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import firebase from "../firebase/firebase.utils";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-
 const signInValidationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email is required!!"),
   password: Yup.string()
@@ -18,7 +25,7 @@ const stylesFunc = makeStyles((theme) => ({
     marginTop: "3rem",
     height: "calc(100vh - 19.0625rem)",
     textAlign: "center",
-    marginBottom: '4rem'
+    marginBottom:"9rem",
   },
   avatar: {
     margin: "1rem auto",
@@ -41,15 +48,25 @@ const initialValues = {
 };
 
 function Signin() {
+  const [loginError, setLoginError] = useState(null);
+  const history = useHistory();
   const signinStyles = stylesFunc();
 
   const handleGoogleButtonClick = () => {
     firebase.useGoogleProvider();
+    alert('You are succesfully logged in!');
+    history.push('/');
   };
 
   const handleFormSubmit = (values) => {
     // alert(JSON.stringify(values, null, 2));
-    firebase.signIn(values.email, values.password);
+    firebase.signIn(values.email, values.password).then((res) => {
+      if (res) {
+        setLoginError(res);
+        return;
+      }
+      history.push("/");
+    });
   };
 
   return (
@@ -62,10 +79,10 @@ function Signin() {
       </Typography>
       <Formik
         initialValues={initialValues}
-        onSubmit={handleFormSubmit}
         validationSchema={signInValidationSchema}
+        onSubmit={handleFormSubmit}
       >
-        {({ handleSubmit, handleChange, values, errors, touched }) => (
+        {({ handleSubmit, handleChange, values, errors }) => (
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
@@ -74,11 +91,10 @@ function Signin() {
                   label="Email"
                   variant="outlined"
                   fullWidth
-                  required
                   value={values.email}
                   onChange={handleChange}
-                  error={touched.email && errors.email}
-                  helperText={touched.email && errors.email}
+                  error={errors.email}
+                  helperText={errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -88,11 +104,10 @@ function Signin() {
                   variant="outlined"
                   type="password"
                   fullWidth
-                  required
                   value={values.password}
                   onChange={handleChange}
-                  error={touched.password && errors.password}
-                  helperText={touched.password && errors.password}
+                  error={errors.password}
+                  helperText={errors.password}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -116,9 +131,23 @@ function Signin() {
                 </Button>
               </Grid>
             </Grid>
+            <p style={{ textAlign: "center", color: "red" }}>
+              <small>{loginError}</small>
+            </p>
+            {/* 
+            //TODO: Add register & forgot password text & links
+            */}
           </form>
         )}
       </Formik>
+      <p>
+        Don't have an account?      
+        <a className = {signinStyles.register} href="/register">Register</a>
+      </p>
+            
+      <p>
+         <a className = {signinStyles.register} href="/forgot-password">Forgot Password?</a>
+      </p>
     </Container>
   );
 }
