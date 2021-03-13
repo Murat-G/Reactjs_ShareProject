@@ -1,9 +1,11 @@
 import React from "react";
-import { Button, TextField, Grid, Container } from "@material-ui/core";
+import { Button, TextField, Grid, Container,Avatar,Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useFormik } from "formik";
 import firebase from "../firebase/firebase.utils";
 import * as Yup from "yup";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+
 
 const signUpValidationSchema = Yup.object().shape({
   displayName: Yup.string().required("Display Name is required!!"),
@@ -14,11 +16,26 @@ const signUpValidationSchema = Yup.object().shape({
 });
 
 
-const stylesFunc = makeStyles({
+const stylesFunc = makeStyles((theme) => ({
   wrapper: {
-    marginTop: "10rem",
+    marginTop: "3rem",
+    height: "calc(100vh - 19.0625rem)",
+    textAlign: "center",
+    marginBottom: "5rem",
   },
-});
+  avatar: {
+    margin: "1rem auto",
+    backgroundColor: theme.palette.secondary.main,
+  },
+  signUp: {
+    margin: "1rem",
+  },
+  login: {
+    textDecoration: 'none',
+    fontWeight: '600',
+    paddingLeft : '0.5rem'
+  }  
+}));
 
 function Signup() {
   const formik = useFormik({
@@ -42,6 +59,12 @@ const handleGoogleButtonClick = () => {
 
   return (
     <Container className={signupStyles.wrapper} maxWidth="sm">
+      <Avatar className={signupStyles.avatar}>
+        <LockOutlinedIcon />
+      </Avatar>
+      <Typography className={signupStyles.signUp} variant="h4">
+        Sign Up
+      </Typography>
       <form onSubmit={formik.handleSubmit} >
         <Grid container spacing={3}>
           <Grid item xs={12}>

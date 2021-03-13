@@ -47,7 +47,6 @@ function Main() {
         fetchData();
     },[]);
     
-    console.log(process.env.REACT_APP_API_BASE_URL)
   return (
     <Container className={mainStyles.wrapper}>
       {!userList ? (
